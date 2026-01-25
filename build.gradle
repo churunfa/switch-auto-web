@@ -1,0 +1,82 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '4.0.1'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.google.protobuf' version '0.9.4'
+}
+
+group = 'com.github.churunfa'
+version = '0.0.1-SNAPSHOT'
+description = 'switch-auto-web'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+def grpcVersion = '1.78.0'
+def protobufVersion = '4.33.4'
+def protocVersion = protobufVersion
+
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // Source: https://mvnrepository.com/artifact/net.devh/grpc-client-spring-boot-starter
+    implementation("net.devh:grpc-client-spring-boot-starter:3.1.0.RELEASE")
+
+
+    implementation platform("io.grpc:grpc-bom:${grpcVersion}")
+    implementation "io.grpc:grpc-api:${grpcVersion}"
+    implementation "io.grpc:grpc-core:${grpcVersion}"
+
+    // gRPC 核心依赖
+    implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+    implementation "io.grpc:grpc-stub:${grpcVersion}"
+
+    // 只有运行时才需要 Netty (传输层)
+    runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
+
+    // 生成代码所需的注解库 (Java 9+ 必须)
+    compileOnly "org.apache.tomcat:annotations-api:6.0.53"
+
+    // Protobuf 自身库
+    implementation "com.google.protobuf:protobuf-java-util:${protobufVersion}"
+
+    // Source: https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2
+    implementation("com.alibaba.fastjson2:fastjson2:2.0.60")
+}
+
+// --- Protobuf 配置 (保持不变，指向你C++项目的proto目录) ---
+protobuf {
+    protoc { artifact = "com.google.protobuf:protoc:${protocVersion}" }
+    plugins {
+        grpc { artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}" }
+    }
+    generateProtoTasks {
+        all()*.plugins { grpc {} }
+    }
+}
+//buildscript {
+//    dependencies {
+//        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+//    }
+//}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
