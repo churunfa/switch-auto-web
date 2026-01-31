@@ -19,6 +19,7 @@ public class BaseOperateVO {
     private List<String> initParams;
     private Integer minExecTime;
     private Integer minResetTime;
+    private Boolean needReset;
 
     public static BaseOperateVO toVO(BaseOperate baseOperate) {
         BaseOperateVO vo = new BaseOperateVO();
@@ -32,6 +33,7 @@ public class BaseOperateVO {
         vo.setInitParams(parseInitParams);
         vo.setMinExecTime(baseOperate.getMinExecTime());
         vo.setMinResetTime(baseOperate.getMinResetTime());
+        vo.setNeedReset(baseOperate.getNeedReset());
         return vo;
     }
 
@@ -52,6 +54,7 @@ public class BaseOperateVO {
                 .setInitParams(JSONObject.toJSONString(vo.getInitParams()))
                 .setMinExecTime(vo.getMinExecTime())
                 .setMinResetTime(vo.getMinResetTime())
+                .setNeedReset(vo.getNeedReset())
                 .build();
     }
 }

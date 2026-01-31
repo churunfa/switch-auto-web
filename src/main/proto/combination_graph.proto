@@ -11,57 +11,73 @@ option java_package = "com.github.churunfa.switchautoweb.combination.graph";
 option java_outer_classname = "CombinationGraphProto";
 
 service CombinationGraphService {
-    rpc GetAllProject (google.protobuf.Empty) returns (GetAllProjectResponse) {}
-    rpc GetAllGraph (StringValue) returns (GetAllGraphResponse) {}
-    rpc GetGraphById (IntValue) returns (CombinationGraph) {}
-    rpc InsertGraph (CombinationGraph) returns (base.SimpleResponse) {}
-    rpc UpdateGraph (CombinationGraph) returns (base.SimpleResponse) {}
-    rpc DeleteGraph (IntValue) returns (base.SimpleResponse) {}
+  rpc GetAllProject (google.protobuf.Empty) returns (GetAllProjectResponse) {}
+  rpc GetAllGraph (StringValue) returns (GetAllGraphResponse) {}
+  rpc GetGraphById (IntValue) returns (CombinationGraph) {}
+  rpc InsertGraph (CombinationGraph) returns (base.SimpleResponse) {}
+  rpc UpdateGraph (CombinationGraph) returns (base.SimpleResponse) {}
+  rpc DeleteGraph (IntValue) returns (base.SimpleResponse) {}
+  rpc ExecGraph(CombinationGraph) returns (base.SimpleResponse) {};
+  rpc ExecGraphById(IntValue) returns (base.SimpleResponse) {};
+  rpc AsyncExecGraph(IntValue) returns (base.SimpleResponse) {};
+  rpc StopAsyncExecGraph(google.protobuf.Empty) returns (base.SimpleResponse) {};
+  rpc GetAsyncExecStatus(google.protobuf.Empty) returns (GetAsyncExecStatusResponse) {};
 
 }
 
 message Combination {
-    int32 id = 1;
-    string project_name = 2;
-    string combination_name = 3;
-    string desc = 4;
-    int32 min_time = 5;
+  int32 id = 1;
+  string project_name = 2;
+  string combination_name = 3;
+  string desc = 4;
+  int32 min_time = 5;
 }
 
 message CombinationNode {
-    int32 node_id = 1;
-    base.operate.BaseOperate base_operate = 2;
-    string params = 3;
-    int32 hold_time = 4;
-    int32 loop_cnt = 5;
-    bool auto_reset = 6;
+  int32 node_id = 1;
+  string node_name = 2;
+  base.operate.BaseOperate base_operate = 3;
+  string params = 4;
+  int32 exec_hold_time = 5;
+  int32 reset_hold_time = 6;
+  int32 loop_cnt = 7;
+  bool exec = 8;
+  bool reset = 9;
 }
 
 message CombinationEdge {
-    int32 edge_id = 1;
-    int32 from_node_id = 2;
-    int32 next_node_id = 3;
+  int32 edge_id = 1;
+  string edge_name = 2;
+  int32 from_node_id = 3;
+  int32 next_node_id = 4;
 
 }
 
 message CombinationGraph {
-    Combination combination = 1;
-    repeated CombinationNode combination_node = 2;
-    repeated CombinationEdge combination_edges = 3;
+  Combination combination = 1;
+  repeated CombinationNode combination_node = 2;
+  repeated CombinationEdge combination_edges = 3;
 }
 
 message StringValue {
-    string value = 1;
+  string value = 1;
 }
 
 message IntValue {
-    int32 value = 1;
+  int32 value = 1;
 }
 
 message GetAllProjectResponse {
-    repeated string project_names = 1;
+  repeated string project_names = 1;
 }
 
 message GetAllGraphResponse {
-    repeated Combination combinations = 1;
+  repeated Combination combinations = 1;
+}
+
+message GetAsyncExecStatusResponse {
+  bool async_running = 1;
+  int32 graph_id = 2;
+  int64 async_start_time = 3;
+  int64 async_exec_cnt = 4;
 }

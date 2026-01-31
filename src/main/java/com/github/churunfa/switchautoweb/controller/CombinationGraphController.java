@@ -2,6 +2,7 @@ package com.github.churunfa.switchautoweb.controller;
 
 import com.github.churunfa.switchautoweb.service.CombinationGraphService;
 import com.github.churunfa.switchautoweb.vo.Msg;
+import com.github.churunfa.switchautoweb.vo.combination.AsyncExecStatusVO;
 import com.github.churunfa.switchautoweb.vo.combination.CombinationGraphVO;
 import com.github.churunfa.switchautoweb.vo.combination.CombinationVO;
 import lombok.AllArgsConstructor;
@@ -47,5 +48,34 @@ public class CombinationGraphController {
     public Msg<Void> deleteGraphById(@PathVariable int id) {
         combinationGraphService.deleteGraphById(id);
         return Msg.success(null);
+    }
+
+    @PostMapping("exec")
+    public Msg<Void> execGraph(@RequestBody CombinationGraphVO graphVO) {
+        combinationGraphService.execGraph(graphVO);
+        return Msg.success(null);
+    }
+
+    @PostMapping("exec/{id}")
+    public Msg<Void> execGraphById(@PathVariable int id) {
+        combinationGraphService.execGraphById(id);
+        return Msg.success(null);
+    }
+
+    @PostMapping("async-exec/{id}")
+    public Msg<Void> asyncExecGraph(@PathVariable int id) {
+        combinationGraphService.asyncExecGraph(id);
+        return Msg.success(null);
+    }
+
+    @PostMapping("stop-async-exec")
+    public Msg<Void> stopAsyncExecGraph() {
+        combinationGraphService.stopAsyncExecGraph();
+        return Msg.success(null);
+    }
+
+    @GetMapping("async-exec-info")
+    public Msg<AsyncExecStatusVO> getAsyncExecStatus() {
+        return Msg.success(combinationGraphService.getAsyncExecStatus());
     }
 }

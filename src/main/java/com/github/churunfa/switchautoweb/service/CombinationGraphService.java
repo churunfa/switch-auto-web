@@ -2,6 +2,7 @@ package com.github.churunfa.switchautoweb.service;
 
 import com.github.churunfa.switchautoweb.base.SimpleResponse;
 import com.github.churunfa.switchautoweb.combination.graph.*;
+import com.github.churunfa.switchautoweb.vo.combination.AsyncExecStatusVO;
 import com.github.churunfa.switchautoweb.vo.combination.CombinationGraphVO;
 import com.github.churunfa.switchautoweb.vo.combination.CombinationVO;
 import com.google.common.base.Preconditions;
@@ -48,4 +49,27 @@ public class CombinationGraphService {
         Preconditions.checkArgument(simpleResponse.getSuccess(), "删除失败");
     }
 
+    public void execGraph(CombinationGraphVO combinationGraphVO) {
+        SimpleResponse simpleResponse = combinationGraphServiceStub.execGraph(CombinationGraphVO.toDTO(combinationGraphVO));
+        Preconditions.checkArgument(simpleResponse.getSuccess(), "执行失败");
+    }
+    public void execGraphById(int id) {
+        SimpleResponse simpleResponse = combinationGraphServiceStub.execGraphById(IntValue.newBuilder().setValue(id).build());
+        Preconditions.checkArgument(simpleResponse.getSuccess(), "执行失败");
+    }
+
+    public void asyncExecGraph(int id) {
+        SimpleResponse simpleResponse = combinationGraphServiceStub.asyncExecGraph(IntValue.newBuilder().setValue(id).build());
+        Preconditions.checkArgument(simpleResponse.getSuccess(), "执行失败");
+    }
+
+    public void stopAsyncExecGraph() {
+        SimpleResponse simpleResponse = combinationGraphServiceStub.stopAsyncExecGraph(Empty.newBuilder().build());
+        Preconditions.checkArgument(simpleResponse.getSuccess(), "执行失败");
+    }
+
+    public AsyncExecStatusVO getAsyncExecStatus() {
+        GetAsyncExecStatusResponse asyncExecStatus = combinationGraphServiceStub.getAsyncExecStatus(Empty.newBuilder().build());
+        return AsyncExecStatusVO.toVO(asyncExecStatus);
+    }
 }

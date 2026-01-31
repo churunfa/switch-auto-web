@@ -6,16 +6,19 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 @Data
 public class CombinationEdgeVO {
     private Integer edgeId;
+    private String edgeName;
     private Integer fromNodeId;
     private Integer nextNodeId;
 
     public static CombinationEdgeVO toVO(CombinationEdge proto) {
         CombinationEdgeVO vo = new CombinationEdgeVO();
         vo.setEdgeId(proto.getEdgeId());
+        vo.setEdgeName(proto.getEdgeName());
         vo.setFromNodeId(proto.getFromNodeId());
         vo.setNextNodeId(proto.getNextNodeId());
         return vo;
@@ -27,7 +30,10 @@ public class CombinationEdgeVO {
                 .setNextNodeId(vo.getNextNodeId());
         if (vo.getEdgeId() != null) {
             builder.setEdgeId(vo.getEdgeId());
+        } else {
+            builder.setEdgeId(new Random().nextInt());
         }
+        builder.setEdgeName(vo.getEdgeName() == null ? "" : vo.getEdgeName());
         return builder.build();
     }
 
