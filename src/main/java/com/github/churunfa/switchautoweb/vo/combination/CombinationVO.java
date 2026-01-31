@@ -6,6 +6,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class CombinationVO {
@@ -14,6 +15,7 @@ public class CombinationVO {
     private String combinationName;
     private String desc;
     private Integer minTime;
+    private Boolean asyncRunning;
 
     public static CombinationVO toVO(Combination proto) {
         CombinationVO vo = new CombinationVO();
@@ -28,7 +30,7 @@ public class CombinationVO {
         if (CollectionUtils.isEmpty(proto)) {
             return Collections.emptyList();
         }
-        return proto.stream().map(CombinationVO::toVO).toList();
+        return proto.stream().map(CombinationVO::toVO).collect(Collectors.toList());
     }
     public static Combination toDTO(CombinationVO vo) {
         Combination.Builder builder = Combination.newBuilder()

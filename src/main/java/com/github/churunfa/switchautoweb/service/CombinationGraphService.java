@@ -10,6 +10,7 @@ import com.google.protobuf.Empty;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -24,6 +25,19 @@ public class CombinationGraphService {
 
     public List<CombinationVO> getAllCombinations(String projectName) {
         GetAllGraphResponse response = combinationGraphServiceStub.getAllGraph(StringValue.newBuilder().setValue(projectName).build());
+        List<CombinationVO> vos = CombinationVO.toVO(response.getCombinationsList());
+        GetAsyncExecStatusResponse asyncExecStatus = combinationGraphServiceStub.getAsyncExecStatus(Empty.newBuilder().build());
+
+        if (asyncExecStatus.getAsyncRunning()) {
+            for (int i = 0; i < vos.size(); i++) {
+                if (vos.get(i).getId().equals(asyncExecStatus.getGraphId())) {
+                    vos.get(i).setAsyncRunning(true);
+                    Collections.swap(vos, 0, i);
+                    return vos;
+                }
+            }
+        }
+
         return CombinationVO.toVO(response.getCombinationsList());
     }
 
@@ -70,6 +84,11 @@ public class CombinationGraphService {
 
     public AsyncExecStatusVO getAsyncExecStatus() {
         GetAsyncExecStatusResponse asyncExecStatus = combinationGraphServiceStub.getAsyncExecStatus(Empty.newBuilder().build());
-        return AsyncExecStatusVO.toVO(asyncExecStatus);
+        AsyncExecStatusVO vo = AsyncExecStatusVO.toVO(asyncExecStatus);
+        if (asyncExecStatus.getAsyncRunning()) {
+            CombinationGraph combinationGraph = combinationGraphServiceStub.getGraphById(IntValue.newBuilder().setValue(asyncExecStatus.getGraphId()).build());
+            vo.setGraph(CombinationGraphVO.toVO(combinationGraph));
+        }
+        return vo;
     }
 }

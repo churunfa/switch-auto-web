@@ -9,6 +9,7 @@ public class AsyncExecStatusVO {
     private Integer graphId;
     private Long asyncStartTime;
     private Long asyncExecCnt;
+    private CombinationGraphVO graph;
 
     public static AsyncExecStatusVO toVO(GetAsyncExecStatusResponse proto) {
         AsyncExecStatusVO vo = new AsyncExecStatusVO();
