@@ -57,4 +57,10 @@ public class BaseOperateVO {
                 .setNeedReset(vo.getNeedReset())
                 .build();
     }
+    public static List<BaseOperate> toDTO(List<BaseOperateVO> vos) {
+        if (CollectionUtils.isEmpty(vos)) {
+            return Collections.emptyList();
+        }
+        return vos.stream().map(BaseOperateVO::toDTO).toList();
+    }
 }

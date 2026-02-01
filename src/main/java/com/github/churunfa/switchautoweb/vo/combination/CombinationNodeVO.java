@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.github.churunfa.switchautoweb.combination.graph.CombinationNode;
 import com.github.churunfa.switchautoweb.vo.BaseOperateVO;
+import com.google.common.collect.Lists;
 import io.micrometer.common.util.StringUtils;
 import lombok.Data;
 import org.springframework.util.CollectionUtils;
@@ -15,67 +16,57 @@ import java.util.List;
 public class CombinationNodeVO {
     private Integer nodeId;
     private String nodeName;
-    private BaseOperateVO baseOperate;
-    private List<String> params;
+    private List<BaseOperateVO> baseOperates;
+    private List<List<String>> params;
     private Integer execHoldTime;
-    private Integer resetHoldTime;
     private Integer loopCnt;
-    private Boolean exec;
-    private Boolean reset;
+    private List<Boolean> resets;
+    private List<Boolean> autoResets;
 
     public static CombinationNodeVO toVO(CombinationNode proto) {
         CombinationNodeVO vo = new CombinationNodeVO();
         vo.setNodeId(proto.getNodeId());
         vo.setNodeName(proto.getNodeName());
-        vo.setBaseOperate(BaseOperateVO.toVO(proto.getBaseOperate()));
-        vo.setParams(JSONArray.parseArray(proto.getParams(), String.class));
-        vo.setExecHoldTime(proto.getExecHoldTime());
-        vo.setResetHoldTime(proto.getResetHoldTime());
-        vo.setLoopCnt(proto.getLoopCnt());
-        vo.setExec(proto.getExec());
-        vo.setReset(proto.getReset());
-        return vo;
-    }
+        vo.setBaseOperates(BaseOperateVO.toVO(proto.getBaseOperatesList()));
 
-    private String defaultName() {
-        String name = getBaseOperate().getName();
-        boolean exec = Boolean.TRUE.equals(getExec());
-        boolean reset = Boolean.TRUE.equals(getReset());
-        if (!exec && !reset) {
-            return name;
+        List<String> optParams = JSONArray.parseArray(proto.getParams(), String.class);
+        vo.setParams(Lists.newArrayList());
+        for (String optParam : optParams) {
+            vo.getParams().add(JSONArray.parseArray(optParam, String.class));
         }
-        if (exec && !reset) {
-            return name + "(EXEC)";
-        }
-        if (!exec) {
-            return name + "(RESET)";
-        }
-        return name + "(EXEC/RESET)";
+        vo.setExecHoldTime(proto.getExecHoldTime());
+        vo.setLoopCnt(proto.getLoopCnt());
+        vo.setResets(JSONArray.parseArray(proto.getResets(), Boolean.class));
+        vo.setAutoResets(JSONArray.parseArray(proto.getAutoResets(), Boolean.class));
+        return vo;
     }
 
     public static CombinationNode toDTO(CombinationNodeVO vo) {
         CombinationNode.Builder builder = CombinationNode.newBuilder()
-                .setBaseOperate(BaseOperateVO.toDTO(vo.getBaseOperate()))
-                .setParams(JSONObject.toJSONString(vo.getParams()))
                 .setLoopCnt(vo.getLoopCnt());
+
+
+        List<String> outParams = Lists.newArrayList();
+        for (List<String> voParam : vo.getParams()) {
+            outParams.add(JSONObject.toJSONString(voParam));
+        }
+        builder.setParams(JSONObject.toJSONString(outParams));
+
+        builder.addAllBaseOperates(BaseOperateVO.toDTO(vo.getBaseOperates()));
+
         if (vo.getNodeId() != null) {
             builder.setNodeId(vo.getNodeId());
         }
         if (StringUtils.isNotBlank(vo.getNodeName())) {
             builder.setNodeName(vo.getNodeName());
         } else {
-            builder.setNodeName(vo.defaultName());
+            builder.setNodeName("");
         }
         if (vo.getExecHoldTime() != null) {
             builder.setExecHoldTime(vo.getExecHoldTime());
         }
-        if (vo.getResetHoldTime() != null) {
-            builder.setResetHoldTime(vo.getResetHoldTime());
-        } else {
-            builder.setResetHoldTime(vo.getBaseOperate().getMinResetTime());
-        }
-        builder.setExec(vo.getExec() != null && vo.getExec());
-        builder.setReset(vo.getReset() != null && vo.getReset());
+        builder.setResets(JSONObject.toJSONString(vo.getResets()));
+        builder.setAutoResets(JSONObject.toJSONString(vo.getAutoResets()));
         return builder.build();
     }
 
