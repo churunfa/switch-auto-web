@@ -8,5 +8,5 @@ import java.util.List;
 public class BaseOperateExecVO {
     private Integer id;
     private Boolean reset;
-    private List<String> params;
+    private List<Integer> params;
 }

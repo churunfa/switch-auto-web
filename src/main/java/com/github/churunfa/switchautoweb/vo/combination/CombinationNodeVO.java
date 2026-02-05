@@ -17,7 +17,7 @@ public class CombinationNodeVO {
     private Integer nodeId;
     private String nodeName;
     private List<BaseOperateVO> baseOperates;
-    private List<List<String>> params;
+    private List<List<Integer>> params;
     private Integer execHoldTime;
     private Integer loopCnt;
     private List<Boolean> resets;
@@ -32,7 +32,7 @@ public class CombinationNodeVO {
         List<String> optParams = JSONArray.parseArray(proto.getParams(), String.class);
         vo.setParams(Lists.newArrayList());
         for (String optParam : optParams) {
-            vo.getParams().add(JSONArray.parseArray(optParam, String.class));
+            vo.getParams().add(JSONArray.parseArray(optParam, Integer.class));
         }
         vo.setExecHoldTime(proto.getExecHoldTime());
         vo.setLoopCnt(proto.getLoopCnt());
@@ -47,7 +47,7 @@ public class CombinationNodeVO {
 
 
         List<String> outParams = Lists.newArrayList();
-        for (List<String> voParam : vo.getParams()) {
+        for (List<Integer> voParam : vo.getParams()) {
             outParams.add(JSONObject.toJSONString(voParam));
         }
         builder.setParams(JSONObject.toJSONString(outParams));
