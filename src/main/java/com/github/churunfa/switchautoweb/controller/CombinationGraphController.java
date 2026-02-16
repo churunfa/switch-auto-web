@@ -23,7 +23,7 @@ public class CombinationGraphController {
     }
 
     @GetMapping("all-combination")
-    public Msg<List<CombinationVO>> getAllCombinations(@RequestParam("projectName") String projectName) {
+    public Msg<List<CombinationVO>> getAllCombinations(@RequestParam(value = "projectName", required = false) String projectName) {
         return Msg.success(combinationGraphService.getAllCombinations(projectName));
     }
 

@@ -24,6 +24,9 @@ public class CombinationGraphService {
     }
 
     public List<CombinationVO> getAllCombinations(String projectName) {
+        if (projectName == null) {
+            projectName = "";
+        }
         GetAllGraphResponse response = combinationGraphServiceStub.getAllGraph(StringValue.newBuilder().setValue(projectName).build());
         List<CombinationVO> vos = CombinationVO.toVO(response.getCombinationsList());
         GetAsyncExecStatusResponse asyncExecStatus = combinationGraphServiceStub.getAsyncExecStatus(Empty.newBuilder().build());
