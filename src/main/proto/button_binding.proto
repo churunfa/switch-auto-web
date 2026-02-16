@@ -67,43 +67,67 @@ enum SwitchButtonType {
 }
 
 service ButtonBindingService {
-    rpc GetAllButtonBindings (google.protobuf.Empty) returns (GetAllButtonBindingsResponse) {}
-    rpc UpdateButtonBinding (UpdateButtonBindingRequest) returns (base.SimpleResponse) {}
-    rpc SetFunctionKey (SetFunctionKeyRequest) returns (base.SimpleResponse) {}
-    rpc BindGraphToButton (BindGraphToButtonRequest) returns (base.SimpleResponse) {}
-    rpc UnbindGraphFromButton (UnbindGraphFromButtonRequest) returns (base.SimpleResponse) {}
+  rpc GetAllButtonBindings (google.protobuf.Empty) returns (GetAllButtonBindingsResponse) {}
+  rpc UpdateButtonBinding (UpdateButtonBindingRequest) returns (base.SimpleResponse) {}
+  rpc SetFunctionKey (SetFunctionKeyRequest) returns (base.SimpleResponse) {}
+  rpc BindGraphToButton (BindGraphToButtonRequest) returns (base.SimpleResponse) {}
+  rpc UnbindGraphFromButton (UnbindGraphFromButtonRequest) returns (base.SimpleResponse) {}
+  // 手柄设备信息查询接口
+  rpc GetConnectedGamepadInfo (google.protobuf.Empty) returns (GamepadInfoResponse) {}
+  rpc GetAllGamepadsInfo (google.protobuf.Empty) returns (AllGamepadsResponse) {}
 }
 
 message ButtonBinding {
-    int32 id = 1;
-    SdlButton sdl_btn = 2;
-    string sdl_btn_name = 3;
-    SwitchButtonType button_type = 4;
-    string button_name = 5;
-    bool function_key = 6;
-    int32 graph_id = 7;
+  int32 id = 1;
+  SdlButton sdl_btn = 2;
+  string sdl_btn_name = 3;
+  SwitchButtonType button_type = 4;
+  string button_name = 5;
+  bool function_key = 6;
+  int32 graph_id = 7;
 }
 
 message GetAllButtonBindingsResponse {
-    repeated ButtonBinding bindings = 1;
+  repeated ButtonBinding bindings = 1;
 }
 
 message UpdateButtonBindingRequest {
-    int32 id = 1;
-    SdlButton sdl_btn = 2;
-    SwitchButtonType button_type = 3;
+  int32 id = 1;
+  SdlButton sdl_btn = 2;
+  SwitchButtonType button_type = 3;
 }
 
 message SetFunctionKeyRequest {
-    int32 id = 1;
-    bool function_key = 2;
+  int32 id = 1;
+  bool function_key = 2;
 }
 
 message BindGraphToButtonRequest {
-    int32 id = 1;
-    int32 graph_id = 2;
+  int32 id = 1;
+  int32 graph_id = 2;
 }
 
 message UnbindGraphFromButtonRequest {
-    int32 id = 1;
+  int32 id = 1;
+}
+
+// 手柄信息消息
+message GamepadInfo {
+  bool connected = 1;
+  string name = 2;
+  string vendor_id = 3;
+  string product_id = 4;
+  string serial_number = 5;
+}
+
+message GamepadInfoResponse {
+  GamepadInfo gamepad_info = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message AllGamepadsResponse {
+  repeated GamepadInfo gamepads = 1;
+  bool success = 2;
+  string error_message = 3;
 }
