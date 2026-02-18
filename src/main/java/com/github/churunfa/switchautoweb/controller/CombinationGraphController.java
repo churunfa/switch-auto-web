@@ -74,6 +74,12 @@ public class CombinationGraphController {
         return Msg.success(null);
     }
 
+    @PostMapping("set-loop-graph/{id}")
+    public Msg<Void> setLoopGraphById(@PathVariable int id) {
+        combinationGraphService.setLoopGraphById(id);
+        return Msg.success(null);
+    }
+
     @GetMapping("async-exec-info")
     public Msg<AsyncExecStatusVO> getAsyncExecStatus() {
         return Msg.success(combinationGraphService.getAsyncExecStatus());

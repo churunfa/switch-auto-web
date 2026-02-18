@@ -85,6 +85,11 @@ public class CombinationGraphService {
         Preconditions.checkArgument(simpleResponse.getSuccess(), "执行失败");
     }
 
+    public void setLoopGraphById(int id) {
+        SimpleResponse simpleResponse = combinationGraphServiceStub.setLoopGraphById(IntValue.newBuilder().setValue(id).build());
+        Preconditions.checkArgument(simpleResponse.getSuccess(), "设置循环图失败");
+    }
+
     public AsyncExecStatusVO getAsyncExecStatus() {
         GetAsyncExecStatusResponse asyncExecStatus = combinationGraphServiceStub.getAsyncExecStatus(Empty.newBuilder().build());
         AsyncExecStatusVO vo = AsyncExecStatusVO.toVO(asyncExecStatus);
