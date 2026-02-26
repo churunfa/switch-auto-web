@@ -11,15 +11,15 @@ import java.util.List;
 
 @Data
 public class BaseOperateVO {
-    private Integer id;
+    private Integer id = 0;
     private String ename;
-    private String name;
-    private Integer paramSize;
+    private String name = "";
+    private Integer paramSize = 0;
     private List<String> paramNames;
     private List<String> initParams;
-    private Integer minExecTime;
-    private Integer minResetTime;
-    private Boolean needReset;
+    private Integer minExecTime = 17;
+    private Integer minResetTime = 17;
+    private Boolean needReset = true;
 
     public static BaseOperateVO toVO(BaseOperate baseOperate) {
         BaseOperateVO vo = new BaseOperateVO();

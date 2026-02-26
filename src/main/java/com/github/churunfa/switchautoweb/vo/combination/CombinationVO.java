@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 @Data
 public class CombinationVO {
     private Integer id;
-    private String projectName;
-    private String combinationName;
-    private String desc;
+    private String projectName = "";
+    private String combinationName = "";
+    private String desc = "";
     private Integer minTime;
     private Boolean asyncRunning;
 

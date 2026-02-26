@@ -14,12 +14,12 @@ import java.util.List;
 
 @Data
 public class CombinationNodeVO {
-    private Integer nodeId;
-    private String nodeName;
+    private Integer nodeId = 0;
+    private String nodeName = "";
     private List<BaseOperateVO> baseOperates;
     private List<List<Integer>> params;
-    private Integer execHoldTime;
-    private Integer loopCnt;
+    private Integer execHoldTime = 50;
+    private Integer loopCnt = 1;
     private List<Boolean> resets;
     private List<Boolean> autoResets;
 
@@ -45,6 +45,12 @@ public class CombinationNodeVO {
         CombinationNode.Builder builder = CombinationNode.newBuilder()
                 .setLoopCnt(vo.getLoopCnt());
 
+        if (vo.getParams().size() != vo.getBaseOperates().size()) {
+            throw new IllegalArgumentException("参数列表长度必须与基础操作列表长度一致");
+        }
+        if (vo.getParams().size() != vo.getResets().size() || vo.getParams().size() != vo.getAutoResets().size()) {
+            throw new IllegalArgumentException("参数列表长度必须与重置列表长度一致");
+        }
 
         List<String> outParams = Lists.newArrayList();
         for (List<Integer> voParam : vo.getParams()) {
@@ -82,5 +88,20 @@ public class CombinationNodeVO {
             return Collections.emptyList();
         }
         return vos.stream().map(CombinationNodeVO::toDTO).toList();
+    }
+
+    public static CombinationNodeVO buildStartNode() {
+        CombinationNodeVO combinationNodeVO = new CombinationNodeVO();
+        combinationNodeVO.setNodeId(1);
+        combinationNodeVO.setNodeName("开始");
+        BaseOperateVO baseOperateVO = new BaseOperateVO();
+        baseOperateVO.setId(25);
+        baseOperateVO.setEname("START_EMPTY");
+        combinationNodeVO.setBaseOperates(List.of(baseOperateVO));
+        combinationNodeVO.setParams(List.of(List.of()));
+        combinationNodeVO.setExecHoldTime(0);
+        combinationNodeVO.setResets(List.of(false));
+        combinationNodeVO.setAutoResets(List.of(false));
+        return combinationNodeVO;
     }
 }

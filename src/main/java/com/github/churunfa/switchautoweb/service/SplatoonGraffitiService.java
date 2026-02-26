@@ -1,11 +1,19 @@
 package com.github.churunfa.switchautoweb.service;
 
+import com.alibaba.fastjson2.JSONObject;
+import com.github.churunfa.switchautoweb.base.SimpleResponse;
+import com.github.churunfa.switchautoweb.combination.graph.CombinationGraphServiceGrpc;
 import com.github.churunfa.switchautoweb.vo.SplatoonGraffitiDrawVO;
 import com.github.churunfa.switchautoweb.vo.combination.CombinationGraphVO;
+import com.google.common.base.Preconditions;
+import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SplatoonGraffitiService {
+
+    @GrpcClient("cplusplus-server")
+    private CombinationGraphServiceGrpc.CombinationGraphServiceBlockingStub combinationGraphServiceStub;
 
     /**
      * 处理绘制请求
@@ -13,14 +21,7 @@ public class SplatoonGraffitiService {
      */
     public void draw(SplatoonGraffitiDrawVO drawVO) {
         CombinationGraphVO graph = drawVO.toGraph();
-        // 模拟处理时间
-        try {
-            Thread.sleep(50); // 模拟处理延迟
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        
-        // 实际项目中这里应该调用硬件控制逻辑
-        // 例如：通过串口发送指令到 Switch 控制器
+        SimpleResponse simpleResponse = combinationGraphServiceStub.execGraph(CombinationGraphVO.toDTO(graph));
+        Preconditions.checkArgument(simpleResponse.getSuccess(), "绘制失败");
     }
 }

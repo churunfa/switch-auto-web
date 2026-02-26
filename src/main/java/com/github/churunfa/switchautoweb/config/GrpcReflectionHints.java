@@ -5,6 +5,7 @@ import com.github.churunfa.switchautoweb.combination.graph.CombinationGraphServi
 import com.github.churunfa.switchautoweb.service.BaseOperateService;
 import com.github.churunfa.switchautoweb.service.ButtonBindingService;
 import com.github.churunfa.switchautoweb.service.CombinationGraphService;
+import com.github.churunfa.switchautoweb.service.SplatoonGraffitiService;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
@@ -26,6 +27,9 @@ public class GrpcReflectionHints implements RuntimeHintsRegistrar {
                 typeHint.withField("buttonBindingServiceStub")
         );
         hints.reflection().registerType(CombinationGraphService.class, typeHint ->
+                typeHint.withField("combinationGraphServiceStub")
+        );
+        hints.reflection().registerType(SplatoonGraffitiService.class, typeHint ->
                 typeHint.withField("combinationGraphServiceStub")
         );
     }

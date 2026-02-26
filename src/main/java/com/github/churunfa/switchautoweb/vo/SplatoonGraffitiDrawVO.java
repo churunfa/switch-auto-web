@@ -74,26 +74,114 @@ public class SplatoonGraffitiDrawVO {
     }
 
     enum Direction {
-        DPAD_UP,
-        DPAD_DOWN,
-        DPAD_LEFT,
-        DPAD_RIGHT
+        DPAD_UP(14),
+        DPAD_DOWN(13),
+        DPAD_LEFT(16),
+        DPAD_RIGHT(15);
+        final int id;
+
+        Direction(int id) {
+            this.id = id;
+        }
     }
 
+    // 2047 -> 2659/320 = 8.309375 ms/像素点
+    // 1024 -> 4850/320 = 15.15625 ms/像素点
+    // 512 -> 11700/320 = 36.5625 ms/像素点
     private CombinationNodeVO buildNode(int nodeId, Direction direction, int indexVal, int stepCount) {
         CombinationNodeVO node = new CombinationNodeVO();
         node.setNodeId(nodeId);
-        /*
-            private List<BaseOperateVO> baseOperates;
-            private List<List<Integer>> params;
-            private Integer execHoldTime;
-            private Integer loopCnt;
-            private List<Boolean> resets;
-            private List<Boolean> autoResets;
-         */
-        BaseOperateVO baseOperate = new BaseOperateVO();
-        baseOperate.setEname(direction.name());
+        List<BaseOperateVO> baseOperates = Lists.newArrayList();
+        List<List<Integer>> params = Lists.newArrayList();
+        List<Boolean> resets = Lists.newArrayList();
+        List<Boolean> autoResets = Lists.newArrayList();
+        int execHoldTime;
+        int loopCnt;
 
+        // 是否按下 A 键（indexVal > 0 代表黑色像素，需要按下 A 键）
+        BaseOperateVO buttonA = new BaseOperateVO();
+        buttonA.setId(4);
+        buttonA.setEname("BUTTON_A");
+        baseOperates.add(buttonA);
+        resets.add(indexVal > 0);
+        autoResets.add(false);
+        params.add(List.of());
+
+        // 大于5启动遥感禁用方向键，小于等于10使用方向键，禁用遥感
+        if (stepCount > 5) {
+            BaseOperateVO downBtn = new BaseOperateVO();
+            downBtn.setId(Direction.DPAD_DOWN.id);
+            downBtn.setEname(Direction.DPAD_DOWN.name());
+            baseOperates.add(downBtn);
+            resets.add(true);
+            autoResets.add(false);
+            params.add(List.of());
+
+            BaseOperateVO leftBtn = new BaseOperateVO();
+            leftBtn.setId(Direction.DPAD_LEFT.id);
+            leftBtn.setEname(Direction.DPAD_LEFT.name());
+            baseOperates.add(leftBtn);
+            resets.add(true);
+            autoResets.add(false);
+            params.add(List.of());
+
+
+            BaseOperateVO rightBtn = new BaseOperateVO();
+            rightBtn.setId(Direction.DPAD_RIGHT.id);
+            rightBtn.setEname(Direction.DPAD_RIGHT.name());
+            baseOperates.add(rightBtn);
+            resets.add(true);
+            autoResets.add(false);
+            params.add(List.of());
+        } else {
+            BaseOperateVO stick = new BaseOperateVO();
+            stick.setId(19);
+            stick.setEname("LEFT_STICK");
+            baseOperates.add(stick);
+            resets.add(true);
+            autoResets.add(false);
+            params.add(List.of());
+        }
+
+        if (stepCount > 50) {
+            BaseOperateVO baseOperateVO = new BaseOperateVO();
+            baseOperateVO.setId(19);
+            baseOperateVO.setEname("LEFT_STICK");
+            baseOperates.add(baseOperateVO);
+            baseOperateVO.setParamSize(2);
+            params.add(Lists.newArrayList(2047 * (direction == Direction.DPAD_LEFT ? -1 : 1), 0));
+            resets.add(false);
+            autoResets.add(false);
+            execHoldTime = (int) Math.round(stepCount * 8.309375);
+            loopCnt = 1;
+        } else if (stepCount > 5) {
+            BaseOperateVO baseOperateVO = new BaseOperateVO();
+            baseOperateVO.setId(19);
+            baseOperateVO.setEname("LEFT_STICK");
+            baseOperates.add(baseOperateVO);
+            baseOperateVO.setParamSize(2);
+            params.add(Lists.newArrayList(1024 * (direction == Direction.DPAD_LEFT ? -1 : 1), 0));
+            resets.add(false);
+            autoResets.add(false);
+            execHoldTime = (int) Math.round(stepCount * 15.15625);
+            loopCnt = 1;
+        } else {
+            BaseOperateVO baseOperateVO = new BaseOperateVO();
+            baseOperateVO.setId(direction.id);
+            baseOperateVO.setEname(direction.name());
+            baseOperates.add(baseOperateVO);
+            resets.add(false);
+            autoResets.add(false);
+            execHoldTime = 40;
+            loopCnt = stepCount;
+            params.add(List.of());
+        }
+        node.setBaseOperates(baseOperates);
+        node.setParams(params);
+        node.setExecHoldTime(execHoldTime);
+        node.setLoopCnt(loopCnt);
+        node.setResets(resets);
+        node.setAutoResets(autoResets);
         return node;
     }
 
@@ -101,7 +189,6 @@ public class SplatoonGraffitiDrawVO {
         CombinationGraphVO combinationGraphVO = new CombinationGraphVO();
         // 基础信息
         combinationGraphVO.setCombination(new CombinationVO());
-
 
         List<CombinationNodeVO> combinationNodes = Lists.newArrayList();
         // 判空保护
@@ -119,6 +206,8 @@ public class SplatoonGraffitiDrawVO {
         Direction currentDir = null; // 初始状态还没移动，方向未知
         int stepCount = 1;        // 第1个像素本身算作1步
         int nodeId = 1;
+        combinationNodes.add(CombinationNodeVO.buildStartNode());
+        nodeId++;
 
         // 从第2个像素开始遍历（索引1）
         for (int i = 1; i < pixelData.length; i++) {
@@ -172,7 +261,6 @@ public class SplatoonGraffitiDrawVO {
             currentDir = (prevY % 2 == 0) ? Direction.DPAD_RIGHT : Direction.DPAD_LEFT;
         }
         combinationNodes.add(buildNode(nodeId, currentDir, currentVal, stepCount));
-        nodeId++;
 
 
         List<CombinationEdgeVO> combinationEdges = Lists.newArrayList();
