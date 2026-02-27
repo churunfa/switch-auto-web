@@ -1,6 +1,7 @@
 package com.github.churunfa.switchautoweb.config;
 
 import com.github.churunfa.switchautoweb.base.button.ButtonBindingServiceGrpc;
+import com.github.churunfa.switchautoweb.cache.BaseOperateCache;
 import com.github.churunfa.switchautoweb.combination.graph.CombinationGraphServiceGrpc;
 import com.github.churunfa.switchautoweb.service.BaseOperateService;
 import com.github.churunfa.switchautoweb.service.ButtonBindingService;
@@ -21,6 +22,9 @@ public class GrpcReflectionHints implements RuntimeHintsRegistrar {
 
 
         hints.reflection().registerType(BaseOperateService.class, typeHint ->
+                typeHint.withField("baseOperateServiceStub")
+        );
+        hints.reflection().registerType(BaseOperateCache.class, typeHint ->
                 typeHint.withField("baseOperateServiceStub")
         );
         hints.reflection().registerType(ButtonBindingService.class, typeHint ->

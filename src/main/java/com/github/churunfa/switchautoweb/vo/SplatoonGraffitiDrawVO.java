@@ -12,10 +12,10 @@ import java.util.List;
 @Data
 public class SplatoonGraffitiDrawVO {
 
-    private final int holdTime = 20;
-    
     // 是否重置绘制（true=重置，false=继续当前绘制）
     private boolean reset = false;
+
+    private boolean fastMode = false;
     
     // 当前组索引（从0开始）
     private int groupIndex;

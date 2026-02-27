@@ -173,11 +173,11 @@ public class SplatoonGraffitiDrawHelper {
         lines.add(new Line(currentDir, currentVal, stepCount));
     }
 
-    public CombinationGraphVO buildGraph(boolean fastMode) {
+    public CombinationGraphVO buildGraph() {
         CombinationGraphVO combinationGraphVO = new CombinationGraphVO();
         // 基础信息
         combinationGraphVO.setCombination(new CombinationVO());
-        List<CombinationNodeVO> nodes = buildNodes(fastMode);
+        List<CombinationNodeVO> nodes = buildNodes();
         combinationGraphVO.setCombinationNodes(nodes);
 
         List<CombinationEdgeVO> combinationEdges = Lists.newArrayList();
@@ -230,14 +230,14 @@ public class SplatoonGraffitiDrawHelper {
         return nodes;
     }
 
-    private List<CombinationNodeVO> buildNodes(boolean fastMode) {
+    private List<CombinationNodeVO> buildNodes() {
         List<CombinationNodeVO> nodes = Lists.newArrayList();
         nodes.add(CombinationNodeVO.buildStartNode());
         if (splatoonGraffitiDrawVO.isReset()) {
             // 重置坐标
             nodes.addAll(resetCursorNodes());
         }
-        nodes.addAll(process(fastMode));
+        nodes.addAll(process(splatoonGraffitiDrawVO.isFastMode()));
         nodes.add(CombinationNodeVO.buildResetNode());
         for (int i = 0; i < nodes.size(); i++) {
             nodes.get(i).setNodeId(i + 1);
@@ -258,7 +258,7 @@ public class SplatoonGraffitiDrawHelper {
         node.addBaseOperate("BUTTON_A", List.of(), line.getIndexVal() == 0, false);
 
         // 大于5启动遥感禁用方向键，小于等于10使用方向键，禁用遥感
-        if (line.getStepCount() > 5) {
+        if (line.getStepCount() > 10) {
             node.addBaseOperate(Direction.DPAD_DOWN.name(), List.of(), true, false);
             node.addBaseOperate(Direction.DPAD_LEFT.name(), List.of(), true, false);
             node.addBaseOperate(Direction.DPAD_RIGHT.name(), List.of(), true, false);
@@ -270,7 +270,7 @@ public class SplatoonGraffitiDrawHelper {
             node.addBaseOperate("LEFT_STICK", List.of(2047 * (line.getDirection() == Direction.DPAD_LEFT ? -1 : 1), 0), false, false);
             execHoldTime = (int) Math.round(line.getStepCount() * 8.309375);
             loopCnt = 1;
-        } else if (line.getStepCount() > 5) {
+        } else if (line.getStepCount() > 10) {
             node.addBaseOperate("LEFT_STICK", List.of(1024 * (line.getDirection() == Direction.DPAD_LEFT ? -1 : 1), 0), false, false);
             execHoldTime = (int) Math.round(line.getStepCount() * 15.15625);
             loopCnt = 1;
