@@ -233,7 +233,7 @@ public class SplatoonGraffitiDrawHelper {
     private List<CombinationNodeVO> buildNodes() {
         List<CombinationNodeVO> nodes = Lists.newArrayList();
         nodes.add(CombinationNodeVO.buildStartNode());
-        if (splatoonGraffitiDrawVO.isReset()) {
+        if (splatoonGraffitiDrawVO.isReset() && splatoonGraffitiDrawVO.getGroupIndex() > 0) {
             // 重置坐标
             nodes.addAll(resetCursorNodes());
         }
