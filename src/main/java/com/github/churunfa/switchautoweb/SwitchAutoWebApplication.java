@@ -5,6 +5,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportRuntimeHints;
 
+/*
+x64 Native Tools Command Prompt
+gradlew nativeCompile
+ */
 @SpringBootApplication
 @ImportRuntimeHints(GrpcReflectionHints.class)
 public class SwitchAutoWebApplication {
