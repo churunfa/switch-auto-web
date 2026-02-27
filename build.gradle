@@ -63,6 +63,8 @@ dependencies {
     
     // Apache Commons Collections
     implementation 'org.apache.commons:commons-collections4:4.4'
+    implementation 'org.boofcv:boofcv-core:1.3.0'
+    implementation 'org.boofcv:boofcv-swing:1.3.0' // 用于与 BufferedImage 互相转换
 }
 
 // --- Protobuf 配置 (保持不变，指向你C++项目的proto目录) ---

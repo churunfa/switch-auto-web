@@ -6,3 +6,10 @@ grpc:
     cplusplus-server:
       address: 'static://localhost:${SWITCH_AUTO_CORE_PORT:50051}'
       negotiation-type: plaintext
+
+# 设置单个文件的最大限制
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
