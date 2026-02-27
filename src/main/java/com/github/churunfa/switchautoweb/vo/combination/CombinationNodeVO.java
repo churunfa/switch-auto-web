@@ -99,7 +99,7 @@ public class CombinationNodeVO {
         return combinationNodeVO;
     }
 
-    public static CombinationNodeVO buildEndNode() {
+    public static CombinationNodeVO buildResetNode() {
         CombinationNodeVO combinationNodeVO = new CombinationNodeVO();
         combinationNodeVO.setNodeName("重置");
         combinationNodeVO.addBaseOperate("RESET_ALL", List.of(), false, false);
@@ -124,6 +124,14 @@ public class CombinationNodeVO {
         params.add(param);
         resets.add(reset);
         autoResets.add(autoReset);
+    }
 
+    public CombinationNodeVO() {
+    }
+
+    public CombinationNodeVO(String ename, List<Integer> param, boolean reset, boolean autoReset, int execHoldTime, int loopCnt) {
+        addBaseOperate(ename, param, reset, autoReset);
+        this.execHoldTime = execHoldTime;
+        this.loopCnt = loopCnt;
     }
 }

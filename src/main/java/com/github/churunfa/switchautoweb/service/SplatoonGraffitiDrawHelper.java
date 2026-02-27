@@ -12,6 +12,7 @@ import java.util.List;
 
 @Data
 public class SplatoonGraffitiDrawHelper {
+    private static final int NORMAL_BTN_HOLD_TIME = 50;
     enum Direction {
         DPAD_UP,
         DPAD_DOWN,
@@ -80,6 +81,24 @@ public class SplatoonGraffitiDrawHelper {
         return index / splatoonGraffitiDrawVO.getColCount();
     }
 
+    private Direction getFirstDirection(int idx) {
+        if (idx == 0) {
+            return Direction.DPAD_RIGHT;
+        }
+        int x = getX(idx - 1);
+        int y = getY(idx - 1);
+        if (x == getX(idx)) {
+            // 同列，向下
+            return Direction.DPAD_DOWN;
+        } else if (y == getY(idx) && y % 2 == 0) {
+            // 同行，向右
+            return Direction.DPAD_RIGHT;
+        } else {
+            // 否则，向左
+            return Direction.DPAD_LEFT;
+        }
+    }
+
     private void buildLines() {
         lines = Lists.newArrayList();
         Byte[] pixelData = splatoonGraffitiDrawVO.getPixelData();
@@ -98,7 +117,7 @@ public class SplatoonGraffitiDrawHelper {
         int prevX = getX(idx);
         int prevY = getY(idx);
         byte currentVal = pixelData[0];
-        Direction currentDir = null; // 初始状态还没移动，方向未知
+        Direction currentDir = getFirstDirection(idx); // 初始状态还没移动，方向未知
         int stepCount = 1;        // 第1个像素本身算作1步
 
 
@@ -172,17 +191,63 @@ public class SplatoonGraffitiDrawHelper {
         return combinationGraphVO;
     }
 
+    private List<CombinationNodeVO> resetCursorNodes() {
+        List<CombinationNodeVO> nodes = Lists.newArrayList();
+        // 返回左上角
+        nodes.add(new CombinationNodeVO("LEFT_STICK", List.of(-2047, 2047), false, false, 4000, 1));
+        // 释放按键
+        nodes.add(CombinationNodeVO.buildResetNode());
+
+        // 移动到像素点
+        int groupIndex = splatoonGraffitiDrawVO.getGroupIndex();
+        int groupSize = splatoonGraffitiDrawVO.getGroupSize();
+        int preIndex = (groupIndex * groupSize) - 1; // 前一个像素点
+        preIndex = Math.max(0, preIndex); // 第一个像素点会越界，直接不要了
+        int x = getX(preIndex);
+        int y = getY(preIndex);
+        // 移动到前一个像素点
+        int diff = Math.min(x, y);
+        // 1.向右下移动
+        CombinationNodeVO moveNode = new CombinationNodeVO();
+        moveNode.setExecHoldTime(50);
+        moveNode.addBaseOperate(Direction.DPAD_DOWN.name(), List.of(), false, true);
+        moveNode.addBaseOperate(Direction.DPAD_RIGHT.name(), List.of(), false, true);
+        moveNode.setLoopCnt(diff);
+        nodes.add(moveNode);
+        // 2.补齐偏移
+        CombinationNodeVO fix = new CombinationNodeVO();
+        moveNode.setExecHoldTime(50);
+        if (x > diff) {
+            fix.addBaseOperate(Direction.DPAD_RIGHT.name(), List.of(), false, true);
+            fix.setLoopCnt(x - diff);
+        } else {
+            fix.addBaseOperate(Direction.DPAD_DOWN.name(), List.of(), false, true);
+            fix.setLoopCnt(y - diff);
+        }
+        nodes.add(fix);
+
+        nodes.add(CombinationNodeVO.buildResetNode());
+        return nodes;
+    }
+
     private List<CombinationNodeVO> buildNodes(boolean fastMode) {
         List<CombinationNodeVO> nodes = Lists.newArrayList();
         nodes.add(CombinationNodeVO.buildStartNode());
+        if (splatoonGraffitiDrawVO.isReset()) {
+            // 重置坐标
+            nodes.addAll(resetCursorNodes());
+        }
         nodes.addAll(process(fastMode));
-        nodes.add(CombinationNodeVO.buildEndNode());
+        nodes.add(CombinationNodeVO.buildResetNode());
         for (int i = 0; i < nodes.size(); i++) {
             nodes.get(i).setNodeId(i + 1);
         }
         return nodes;
     }
 
+    // 2047 -> 2659/320 = 8.309375 ms/像素点
+    // 1024 -> 4850/320 = 15.15625 ms/像素点
+    // 512 -> 11700/320 = 36.5625 ms/像素点
     private CombinationNodeVO buildFastNode(Line line) {
         CombinationNodeVO node = new CombinationNodeVO();
 
@@ -211,7 +276,7 @@ public class SplatoonGraffitiDrawHelper {
             loopCnt = 1;
         } else {
             node.addBaseOperate(line.direction.name(), List.of(), false, true);
-            execHoldTime = 50;
+            execHoldTime = NORMAL_BTN_HOLD_TIME;
             loopCnt = line.getStepCount();
         }
 
@@ -237,7 +302,7 @@ public class SplatoonGraffitiDrawHelper {
         // 是否按下 A 键（indexVal > 0 代表黑色像素，需要按下 A 键）
         node.addBaseOperate("BUTTON_A", List.of(), line.getIndexVal() == 0, false);
         node.addBaseOperate(line.direction.name(), List.of(), false, true);
-        node.setExecHoldTime(50);
+        node.setExecHoldTime(NORMAL_BTN_HOLD_TIME);
         node.setLoopCnt(line.getStepCount());
         return node;
     }
