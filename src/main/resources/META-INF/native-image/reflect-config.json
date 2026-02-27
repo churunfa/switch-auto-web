@@ -1,0 +1,30 @@
+[
+  {
+    "name": "com.sun.imageio.plugins.png.PNGImageReaderSpi",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "com.sun.imageio.plugins.bmp.BMPImageReaderSpi",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "com.sun.imageio.plugins.gif.GIFImageReaderSpi",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "com.sun.imageio.spi.RAFImageInputStreamSpi",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "com.sun.imageio.spi.InputStreamImageInputStreamSpi",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "com.sun.imageio.spi.FileImageInputStreamSpi",
+    "allDeclaredConstructors": true
+  }
+]
