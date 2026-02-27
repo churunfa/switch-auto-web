@@ -2,6 +2,7 @@ package com.github.churunfa.switchautoweb.vo.combination;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.github.churunfa.switchautoweb.cache.BaseOperateCache;
 import com.github.churunfa.switchautoweb.combination.graph.CombinationNode;
 import com.github.churunfa.switchautoweb.vo.BaseOperateVO;
 import com.google.common.collect.Lists;
@@ -92,16 +93,37 @@ public class CombinationNodeVO {
 
     public static CombinationNodeVO buildStartNode() {
         CombinationNodeVO combinationNodeVO = new CombinationNodeVO();
-        combinationNodeVO.setNodeId(1);
         combinationNodeVO.setNodeName("开始");
-        BaseOperateVO baseOperateVO = new BaseOperateVO();
-        baseOperateVO.setId(25);
-        baseOperateVO.setEname("START_EMPTY");
-        combinationNodeVO.setBaseOperates(List.of(baseOperateVO));
-        combinationNodeVO.setParams(List.of(List.of()));
+        combinationNodeVO.addBaseOperate("START_EMPTY", List.of(), false, false);
         combinationNodeVO.setExecHoldTime(0);
-        combinationNodeVO.setResets(List.of(false));
-        combinationNodeVO.setAutoResets(List.of(false));
         return combinationNodeVO;
+    }
+
+    public static CombinationNodeVO buildEndNode() {
+        CombinationNodeVO combinationNodeVO = new CombinationNodeVO();
+        combinationNodeVO.setNodeName("重置");
+        combinationNodeVO.addBaseOperate("RESET_ALL", List.of(), false, false);
+        combinationNodeVO.setExecHoldTime(0);
+        return combinationNodeVO;
+    }
+
+    public void addBaseOperate(String ename, List<Integer> param, boolean reset, boolean autoReset) {
+        if (baseOperates == null) {
+            baseOperates = Lists.newArrayList();
+        }
+        if (params == null) {
+            params = Lists.newArrayList();
+        }
+        if (resets == null) {
+            resets = Lists.newArrayList();
+        }
+        if (autoResets == null) {
+            autoResets = Lists.newArrayList();
+        }
+        baseOperates.add(BaseOperateCache.getBaseOperate(ename));
+        params.add(param);
+        resets.add(reset);
+        autoResets.add(autoReset);
+
     }
 }

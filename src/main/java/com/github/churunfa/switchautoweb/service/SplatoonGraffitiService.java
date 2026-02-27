@@ -20,7 +20,8 @@ public class SplatoonGraffitiService {
      * @param drawVO 绘制请求对象
      */
     public void draw(SplatoonGraffitiDrawVO drawVO) {
-        CombinationGraphVO graph = drawVO.toGraph();
+        SplatoonGraffitiDrawHelper helper = new SplatoonGraffitiDrawHelper(drawVO);
+        CombinationGraphVO graph = helper.buildGraph(false);
         SimpleResponse simpleResponse = combinationGraphServiceStub.execGraph(CombinationGraphVO.toDTO(graph));
         Preconditions.checkArgument(simpleResponse.getSuccess(), "绘制失败");
     }
