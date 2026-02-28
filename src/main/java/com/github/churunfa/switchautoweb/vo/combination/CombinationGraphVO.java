@@ -1,6 +1,5 @@
 package com.github.churunfa.switchautoweb.vo.combination;
 
-import com.github.churunfa.switchautoweb.combination.graph.Combination;
 import com.github.churunfa.switchautoweb.combination.graph.CombinationGraph;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
