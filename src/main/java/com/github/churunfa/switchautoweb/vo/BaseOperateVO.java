@@ -2,6 +2,7 @@ package com.github.churunfa.switchautoweb.vo;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.github.churunfa.switchautoweb.base.operate.BaseOperate;
 import lombok.Data;
 import org.springframework.util.CollectionUtils;
@@ -11,14 +12,23 @@ import java.util.List;
 
 @Data
 public class BaseOperateVO {
+    @JsonPropertyDescription("基础操作id")
     private Integer id = 0;
+    @JsonPropertyDescription("基础操作标识，请参考topology-rules.txt文件")
     private String ename;
+    @JsonPropertyDescription("基础操作名称，执行时可以留空")
     private String name = "";
+    @JsonPropertyDescription("基础操作参数个数，请参考topology-rules.txt文件")
     private Integer paramSize = 0;
+    @JsonPropertyDescription("基础操作参数名称，请参考topology-rules.txt文件")
     private List<String> paramNames;
+    @JsonPropertyDescription("基础操作初始参数，请参考topology-rules.txt文件")
     private List<String> initParams;
+    @JsonPropertyDescription("基础操作最小执行时间")
     private Integer minExecTime = 17;
+    @JsonPropertyDescription("基础操作最小重置时间")
     private Integer minResetTime = 17;
+    @JsonPropertyDescription("基础操作是否需要重置，如：按下Y键后需要松开，则在这里放入true，表示这是一个需要重置的操作")
     private Boolean needReset = true;
 
     public static BaseOperateVO toVO(BaseOperate baseOperate) {

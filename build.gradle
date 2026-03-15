@@ -74,7 +74,11 @@ dependencies {
     
     // Spring AI 依赖
     implementation("org.springframework.ai:spring-ai-openai:2.0.0-M2")
-    
+    implementation("org.springframework.ai:spring-ai-client-chat:2.0.0-M2")
+//    implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter:1.1.2")
+//    implementation("org.springframework.ai:spring-ai-core:1.1.2")
+
+
     // SQLite 驱动
     implementation 'org.xerial:sqlite-jdbc:3.51.2.0'
     
