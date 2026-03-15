@@ -6,14 +6,15 @@ import com.github.churunfa.switchautoweb.service.ModelConfigService;
 import com.github.churunfa.switchautoweb.vo.ModelInfoVO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.openai.api.OpenAiApi;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Objects;
 
 @Slf4j
 @AllArgsConstructor
@@ -39,12 +40,10 @@ public class ModelConfigServiceImpl implements ModelConfigService {
                             .build())
                     .build();
 
-            ChatClient chatClient = ChatClient.create(chatModel);
-
-            String response = chatClient.prompt()
-                    .user("Hello")
-                    .call()
-                    .content();
+            String response = Objects.requireNonNull(chatModel.call(new Prompt("Hello"))
+                            .getResult())
+                    .getOutput()
+                    .getText();
 
             if (response != null && !response.trim().isEmpty()) {
                 log.info("模型连接测试成功：{}", modelInfoVO.getModelName());

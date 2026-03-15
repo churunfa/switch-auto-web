@@ -73,11 +73,10 @@ dependencies {
     implementation 'org.bouncycastle:bctls-jdk18on:1.78.1'
     
     // Spring AI 依赖
-    implementation 'org.springframework.ai:spring-ai-starter-model-openai:2.0.0-M2'
+    implementation("org.springframework.ai:spring-ai-openai:2.0.0-M2")
     
     // SQLite 驱动
     implementation 'org.xerial:sqlite-jdbc:3.51.2.0'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     
     // MyBatis-Plus
     implementation 'com.baomidou:mybatis-plus-spring-boot3-starter:3.5.16'
