@@ -15,3 +15,10 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:${SWITCH_AUTO_DB_PATH}
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/schema.sql
