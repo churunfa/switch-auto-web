@@ -43,7 +43,6 @@ public class SplatoonGraffitiController {
 
             return Msg.success(bitmapBase64);
         } catch (Exception e) {
-            e.printStackTrace();
             return Msg.fail("处理失败: " + e.getMessage());
         }
     }
