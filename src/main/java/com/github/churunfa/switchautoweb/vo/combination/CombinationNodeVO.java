@@ -2,7 +2,6 @@ package com.github.churunfa.switchautoweb.vo.combination;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.github.churunfa.switchautoweb.cache.BaseOperateCache;
 import com.github.churunfa.switchautoweb.combination.graph.CombinationNode;
 import com.github.churunfa.switchautoweb.vo.BaseOperateVO;
@@ -16,21 +15,13 @@ import java.util.List;
 
 @Data
 public class CombinationNodeVO {
-    @JsonPropertyDescription("节点id，执行时需要保证id唯一且不变")
     private Integer nodeId = 0;
-    @JsonPropertyDescription("节点名称，执行时可以留空")
     private String nodeName = "";
-    @JsonPropertyDescription("节点对应的操作列表，里面所有的操作会同时执行")
     private List<BaseOperateVO> baseOperates;
-    @JsonPropertyDescription("节点每个操作对应的参数列表，参数列表长度必须与操作列表长度一致")
     private List<List<Integer>> params;
-    @JsonPropertyDescription("节点执行时间，单位为毫秒。执行完操作后需要等待一段时间，等待操作生效")
     private Integer execHoldTime = 50;
-    @JsonPropertyDescription("节点循环执行的次数")
     private Integer loopCnt = 1;
-    @JsonPropertyDescription("节点对应的操作是否是重置操作。如：想松开Y键，需要在baseOperates中放入Y键对应的操作，并在resets中放入true，表示这是一个重置操作")
     private List<Boolean> resets;
-    @JsonPropertyDescription("节点对应的操作是否需要自动重置。如：按下Y键后需要自动松开，则在autoResets中放入true，表示需要自动重置；执行时，会在execHoldTime时间执行一半时自动执行一次重置操作")
     private List<Boolean> autoResets;
 
     public static CombinationNodeVO toVO(CombinationNode proto) {

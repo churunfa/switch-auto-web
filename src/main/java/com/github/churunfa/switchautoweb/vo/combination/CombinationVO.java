@@ -1,6 +1,5 @@
 package com.github.churunfa.switchautoweb.vo.combination;
 
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.github.churunfa.switchautoweb.combination.graph.Combination;
 import lombok.Data;
 import org.springframework.util.CollectionUtils;
@@ -11,17 +10,11 @@ import java.util.stream.Collectors;
 
 @Data
 public class CombinationVO {
-    @JsonPropertyDescription("组合拓扑图的id，执行时可以留空")
     private Integer id;
-    @JsonPropertyDescription("项目名，执行时可以留空")
     private String projectName = "";
-    @JsonPropertyDescription("组合拓扑图名称，执行时可以留空")
     private String combinationName = "";
-    @JsonPropertyDescription("组合拓扑图描述，执行时可以留空")
     private String desc = "";
-    @JsonPropertyDescription("组合拓扑图最小执行时间，执行时可以留空")
     private Integer minTime;
-    @JsonPropertyDescription("组合拓扑图是否异步执行中，执行时可以留空")
     private Boolean asyncRunning;
 
     public static CombinationVO toVO(Combination proto) {

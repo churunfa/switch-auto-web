@@ -1,6 +1,5 @@
 package com.github.churunfa.switchautoweb.vo.combination;
 
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.github.churunfa.switchautoweb.combination.graph.CombinationGraph;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -10,12 +9,8 @@ import java.util.*;
 
 @Data
 public class CombinationGraphVO {
-
-    @JsonPropertyDescription("组合图的基本信息")
     private CombinationVO combination;
-    @JsonPropertyDescription("组合图中的节点列表")
     private List<CombinationNodeVO> combinationNodes;
-    @JsonPropertyDescription("组合图中的边列表")
     private List<CombinationEdgeVO> combinationEdges;
 
     public static CombinationGraphVO toVO(CombinationGraph proto) {

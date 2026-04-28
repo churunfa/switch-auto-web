@@ -60,24 +60,6 @@ public class ModelConfigServiceImpl implements ModelConfigService {
     }
 
     @Override
-    public ModelInfoVO getById(Long id) {
-        try {
-            log.info("根据 ID 查询模型配置：id={}", id);
-            ModelConfig modelConfig = modelConfigMapper.selectById(id);
-            if (modelConfig == null) {
-                log.warn("未找到模型配置：id={}", id);
-                return null;
-            }
-            ModelInfoVO modelInfoVO = ModelInfoVO.toVO(modelConfig);
-            log.info("查询到模型配置：{}", modelInfoVO.getModelName());
-            return modelInfoVO;
-        } catch (Exception e) {
-            log.error("查询模型配置失败：id={}", id, e);
-            return null;
-        }
-    }
-
-    @Override
     public boolean addModelConfig(ModelInfoVO modelInfoVO) {
         try {
             ModelConfig modelConfig = ModelInfoVO.toEntity(modelInfoVO);
