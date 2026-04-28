@@ -4,7 +4,6 @@ import com.github.churunfa.switchautoweb.entity.ModelConfig;
 import com.github.churunfa.switchautoweb.mapper.ModelConfigMapper;
 import com.github.churunfa.switchautoweb.service.ModelConfigService;
 import com.github.churunfa.switchautoweb.vo.ModelInfoVO;
-import com.github.churunfa.switchautoweb.vo.Msg;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.model.ChatModel;
@@ -74,22 +73,5 @@ public class ModelConfigServiceImpl implements ModelConfigService {
             log.error("模型配置写入数据库失败：{} - {}", modelInfoVO.getModelName(), e.getMessage(), e);
             return false;
         }
-    }
-
-    @Override
-    public Msg<Boolean> validateModelInfo(ModelInfoVO modelInfoVO) {
-        if (modelInfoVO.getApiKey() == null || modelInfoVO.getApiKey().trim().isEmpty()) {
-            return Msg.fail("API Key 不能为空");
-        }
-        
-        if (modelInfoVO.getBaseUrl() == null || modelInfoVO.getBaseUrl().trim().isEmpty()) {
-            return Msg.fail("Base URL 不能为空");
-        }
-        
-        if (modelInfoVO.getModelId() == null || modelInfoVO.getModelId().trim().isEmpty()) {
-            return Msg.fail("Model ID 不能为空");
-        }
-        
-        return null;
     }
 }
