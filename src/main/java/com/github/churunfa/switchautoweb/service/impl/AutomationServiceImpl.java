@@ -1,7 +1,6 @@
 package com.github.churunfa.switchautoweb.service.impl;
 
 import com.github.churunfa.switchautoweb.service.IAutomationService;
-import com.github.churunfa.switchautoweb.service.ICaptureCardService;
 import com.github.churunfa.switchautoweb.service.ModelConfigService;
 import com.github.churunfa.switchautoweb.vo.AutomationTaskProgress;
 import com.github.churunfa.switchautoweb.vo.ModelInfoVO;
@@ -38,8 +37,6 @@ public class AutomationServiceImpl implements IAutomationService {
 
     private final ModelConfigService modelConfigService;
 
-    private final ICaptureCardService captureCardService;
-
     // 注入 AIConfig 中定义的 Function Bean
     private final Function<String, byte[]> captureGameScreen;
 
@@ -63,10 +60,6 @@ public class AutomationServiceImpl implements IAutomationService {
         String taskId = UUID.randomUUID().toString();
 
         log.info("接收到自动化请求：taskId={}, deviceName={}", taskId, deviceName);
-
-        if (!captureCardService.isDeviceConnected(deviceName)) {
-            captureCardService.connectDeviceByName(deviceName);
-        }
 
         return Flux.create(sink -> {
             try {
