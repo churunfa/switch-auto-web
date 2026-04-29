@@ -33,4 +33,6 @@ public class SplatoonGraffitiDrawVO {
     private int colCount;
     // 行列数
     private int rowCount;
+    // 按钮按住时间（毫秒）
+    private int btnHoldTime  = 50;
 }

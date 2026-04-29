@@ -12,7 +12,6 @@ import java.util.List;
 
 @Data
 public class SplatoonGraffitiDrawHelper {
-    private static final int NORMAL_BTN_HOLD_TIME = 50;
     enum Direction {
         DPAD_UP,
         DPAD_DOWN,
@@ -276,7 +275,7 @@ public class SplatoonGraffitiDrawHelper {
             loopCnt = 1;
         } else {
             node.addBaseOperate(line.direction.name(), List.of(), false, true);
-            execHoldTime = NORMAL_BTN_HOLD_TIME;
+            execHoldTime = splatoonGraffitiDrawVO.getBtnHoldTime();
             loopCnt = line.getStepCount();
         }
 
@@ -302,7 +301,7 @@ public class SplatoonGraffitiDrawHelper {
         // 是否按下 A 键（indexVal > 0 代表黑色像素，需要按下 A 键）
         node.addBaseOperate("BUTTON_A", List.of(), line.getIndexVal() == 0, false);
         node.addBaseOperate(line.direction.name(), List.of(), false, true);
-        node.setExecHoldTime(NORMAL_BTN_HOLD_TIME);
+        node.setExecHoldTime(splatoonGraffitiDrawVO.getBtnHoldTime());
         node.setLoopCnt(line.getStepCount());
         return node;
     }
