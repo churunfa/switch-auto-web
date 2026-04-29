@@ -23,7 +23,7 @@ public class SplatoonGraffitiDrawVO {
     // 组大小
     private int groupSize;
     
-    // 像素数据数组（0=白色，1=黑色）
+    // 像素数据数组（0=不需要绘制，1=需要绘制）
     private Byte[] pixelData;
     
     // 总组数
